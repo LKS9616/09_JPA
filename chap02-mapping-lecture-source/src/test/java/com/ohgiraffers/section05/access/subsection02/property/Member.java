@@ -2,7 +2,7 @@ package com.ohgiraffers.section05.access.subsection02.property;
 
 import jakarta.persistence.*;
 
-@Entity(name="member_section05_sub02")
+// @Entity(name="member_section05_sub02")
 @Access(AccessType.PROPERTY)
 /*
 * 클래스 레벨에 @Acces(AccessType.PROPERTY)를 선언할 때 @Id 어노테이션이 필드에 있다면 엔티티를 생성하지 못한다.
