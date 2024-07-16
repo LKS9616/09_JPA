@@ -150,7 +150,7 @@ public class SimpleJPQLTest {
 
         // given
         // when
-        String jpql = "select distinct m.categoryCord from menu_section01 m";
+        String jpql = "select distinct m.categoryCode from menu_section01 m";
         TypedQuery<Integer> query = entityManager.createQuery(jpql, Integer.class);
 
         List<Integer> categoryList = query.getResultList();
