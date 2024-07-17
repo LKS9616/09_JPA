@@ -1,4 +1,4 @@
-package com.ohgiraffers.section02.parameter;
+package com.ohgiraffers.section05.groupfunction;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -6,7 +6,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.*;
 
-//@Entity(name="menu_section02")
+//@Entity(name="menu_section05")
 @Table(name="tbl_menu")
 @NoArgsConstructor
 @AllArgsConstructor

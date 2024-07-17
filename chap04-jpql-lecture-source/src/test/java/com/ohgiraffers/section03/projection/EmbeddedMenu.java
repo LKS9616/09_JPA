@@ -1,32 +1,28 @@
-package com.ohgiraffers.section01.simple;
+package com.ohgiraffers.section03.projection;
 
 import jakarta.persistence.*;
 import lombok.*;
 
-// @Entity(name="menu_section01")
+//@Entity(name="embedded_menu")
 @Table(name="tbl_menu")
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
 @Getter
 @ToString
-public class Menu {
+public class EmbeddedMenu {
 
     @Id
     @Column(name="menu_code")
     private int menuCode;
 
-    @Column(name="menu_name")
-    private String menuName;
-
-    @Column(name="menu_price")
-    private int menuPrice;
+    @Embedded
+    private MenuInfo menuInfo;
 
     @Column(name="category_code")
     private int categoryCode;
 
     @Column(name="orderable_status")
     private String orderableStatus;
-
 
 }

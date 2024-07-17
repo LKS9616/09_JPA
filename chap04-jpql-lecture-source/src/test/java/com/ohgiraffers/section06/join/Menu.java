@@ -1,12 +1,9 @@
-package com.ohgiraffers.section02.parameter;
+package com.ohgiraffers.section06.join;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
-//@Entity(name="menu_section02")
+//@Entity(name="menu_section06")
 @Table(name="tbl_menu")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,11 +22,11 @@ public class Menu {
     @Column(name="menu_price")
     private int menuPrice;
 
-    @Column(name="category_code")
-    private int categoryCode;
+    @ManyToOne
+    @JoinColumn(name="category_code")
+    private Category category;
 
     @Column(name="orderable_status")
     private String orderableStatus;
-
 
 }

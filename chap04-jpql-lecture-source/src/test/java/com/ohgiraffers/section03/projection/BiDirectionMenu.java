@@ -1,19 +1,16 @@
-package com.ohgiraffers.section02.parameter;
+package com.ohgiraffers.section03.projection;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.*;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-//@Entity(name="menu_section02")
+//@Entity(name="bidirection_menu")
 @Table(name="tbl_menu")
 @NoArgsConstructor
 @AllArgsConstructor
-@Setter
-@Getter
 @ToString
-public class Menu {
+public class BiDirectionMenu {
 
     @Id
     @Column(name="menu_code")
@@ -25,11 +22,11 @@ public class Menu {
     @Column(name="menu_price")
     private int menuPrice;
 
-    @Column(name="category_code")
-    private int categoryCode;
+    @ManyToOne
+    @JoinColumn(name="category_code")
+    private BiDirectionCategory category;
 
     @Column(name="orderable_status")
     private String orderableStatus;
-
 
 }
