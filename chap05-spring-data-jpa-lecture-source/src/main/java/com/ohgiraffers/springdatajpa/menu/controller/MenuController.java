@@ -105,4 +105,51 @@ public class MenuController {
 
         return categoryList;
     }
+
+    @PostMapping("/regist")
+    public String registNewMenu(@ModelAttribute MenuDto newMenu) {
+
+        log.info("newMenu ==================== > {}", newMenu);
+
+        menuService.registNewMenu(newMenu);
+
+        return "redirect:/menu/list";
+    }
+
+    @GetMapping("/modify/{menuCode}")
+    public String modifyPage(@PathVariable int menuCode, Model model) {
+
+        log.info("menuCode = {}", menuCode);
+
+        // 메뉴코드로 메뉴 조회해오는 기능
+        MenuDto menu = menuService.findMenuByCode(menuCode);
+
+        model.addAttribute("menu", menu);
+
+        return "menu/modify";
+    }
+
+    @PostMapping("/modify")
+
+    // ModelAttribute 생략가능
+    public String modifyMenu(MenuDto modifyMenu) {
+        log.info("modifyMenu ============== {}", modifyMenu);
+
+        menuService.modifyMenu(modifyMenu);
+
+        return "redirect:/menu/modify/" + modifyMenu.getMenuCode();
+    }
+
+    @GetMapping("/delete")
+    public void deletePage() {
+    }
+
+    @PostMapping("/delete")
+    public String deleteMenu(@RequestParam Integer menuCode) {
+
+        menuService.deleteMenu(menuCode);
+
+        return "redirect:/menu/list";
+    }
+
 }

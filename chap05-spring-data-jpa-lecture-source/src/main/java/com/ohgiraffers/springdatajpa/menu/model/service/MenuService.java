@@ -5,7 +5,9 @@ import com.ohgiraffers.springdatajpa.menu.model.dto.CategoryDto;
 import com.ohgiraffers.springdatajpa.menu.model.dto.MenuDto;
 import com.ohgiraffers.springdatajpa.menu.model.entity.Category;
 import com.ohgiraffers.springdatajpa.menu.model.entity.Menu;
+import com.ohgiraffers.springdatajpa.menu.model.repository.CategoryRepository;
 import com.ohgiraffers.springdatajpa.menu.model.repository.MenuRepository;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -13,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,12 +26,20 @@ public class MenuService {
 
     private final MenuRepository menuRepository;
     private final ModelMapper modelMapper;
+    private final CategoryRepository categoryRepository;
 
-    public MenuService(MenuRepository menuRepository, ModelMapper modelMapper) {
+    public MenuService(MenuRepository menuRepository, ModelMapper modelMapper, CategoryRepository categoryRepository) {
         this.menuRepository = menuRepository;
         this.modelMapper = modelMapper;
+        this.categoryRepository = categoryRepository;
     }
 
+    /**
+     * /** 후 엔터
+     * 메뉴코드로 메뉴를 찾는 메소드
+     * @param menuCode : 찾을 메뉴의 메뉴코드
+     * @return
+     */
     public MenuDto findMenuByCode(int menuCode) {
 
         // MenuDto -> 일반클래스
@@ -82,7 +93,7 @@ public class MenuService {
 //            menuList = menuRepository.findByMenuPriceGreaterThan(menuPrice, Sort.by("menuPrice").descending());
 //        }
 
-        if(menuPrice == 0) {
+        if (menuPrice == 0) {
             menuList = menuRepository.findAll();
         } else if (menuPrice > 0) {
             menuList =
@@ -95,7 +106,7 @@ public class MenuService {
 
         List<Menu> menuList = null;
 
-        if(menuPrice == 0) {
+        if (menuPrice == 0) {
             menuList = menuRepository.findAll();
         } else if (menuPrice > 0) {
             menuList =
@@ -106,6 +117,46 @@ public class MenuService {
 
     public List<CategoryDto> findAllCategory() {
 
-//        List<Category> categoryList = categoryRepository;
+//        List<Category> categoryList = categoryRepository.findAll();
+
+//        List<Category> categoryList = categoryRepository.findAllCategoryByJPQL();
+
+        // NativeQuery
+        List<Category> categoryList = categoryRepository.findAllCategoryByNativeQuery();
+
+        return categoryList.stream().map(category -> modelMapper.map(category, CategoryDto.class)).collect(Collectors.toList());
     }
+
+    @Transactional
+    public void registNewMenu(MenuDto newMenu) {
+
+        Menu menu = modelMapper.map(newMenu, Menu.class);
+
+        // Builder 적용
+//        Menu menu = new Menu().builder().menuName(newMenu.getMenuName()).menuPrice(newMenu.getMenuPrice())
+//                .categoryCode(newMenu.getCategoryCode()).orderableStatus(newMenu.getOrderableStatus()).build();
+
+        menuRepository.save(menu);
+    }
+
+    @Transactional
+    public void modifyMenu(MenuDto modifyMenu) {
+
+        // modifyMenu -> 비영속
+        // 영속
+        log.info("modifyMenu ==============> {}", modifyMenu);
+        Menu foundMenu = menuRepository.findById(modifyMenu.getMenuCode()).orElseThrow(() -> new IllegalArgumentException("Menu not found!"));
+
+        foundMenu.setMenuName(modifyMenu.getMenuName());
+//        foundMenu.toBuilder().menuName(modifyMenu.getMenuName()).build();
+
+        log.info("foundMenu =============>{}", foundMenu);
+    }
+
+    @Transactional
+    public void deleteMenu(Integer menuCode) {
+        menuRepository.deleteById(menuCode);
+    }
+
+
 }
